@@ -1,11 +1,9 @@
 import 'dart:ui' show PointerDeviceKind;
 import 'package:flutter/material.dart';
 import 'package:rapyd_collect_api/core/app_theme.dart';
-import 'package:rapyd_collect_api/core/utils/rapyd_client.dart';
 import 'package:rapyd_collect_api/src/view/screen/home_screen.dart';
 
 void main() async {
-
   runApp(const MyApp());
 }
 
