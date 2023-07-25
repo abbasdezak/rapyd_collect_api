@@ -47,8 +47,13 @@ class CartScreen extends StatelessWidget {
                   child: CartListView(
                     furnitureItems: controller.cartFurniture,
                     counterButton: (furniture) {
-                      return Container(
-                        width: 50,
+                      return CounterButton(
+                        orientation: Axis.vertical,
+                        onIncrementSelected: () =>
+                            controller.increaseItem(furniture),
+                        onDecrementSelected: () =>
+                            controller.decreaseItem(furniture),
+                        label: furniture.quantity,
                       );
                     },
                   ),

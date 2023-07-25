@@ -162,27 +162,27 @@ class ItemsDetailScreen extends StatelessWidget {
                   style: const TextStyle(color: Colors.black45),
                 ).fadeAnimation(0.8),
                 const SizedBox(height: 20),
-                // Row(
-                //   children: [
-                //     const Text(
-                //       "Color :",
-                //       style: h2Style,
-                //       textAlign: TextAlign.end,
-                //     ),
-                //     Expanded(child: ColorPicker(furniture.colors)),
-                //     Expanded(child: GetBuilder(
-                //       builder: (OfficeFurnitureController controller) {
-                //         return CounterButton(
-                //           label: furniture.quantity,
-                //           onIncrementSelected: () =>
-                //               controller.increaseItem(furniture),
-                //           onDecrementSelected: () =>
-                //               controller.decreaseItem(furniture),
-                //         );
-                //       },
-                //     ))
-                //   ],
-                // ).fadeAnimation(1.0)
+                Row(
+                  children: [
+                    const Text(
+                      "Color :",
+                      style: h2Style,
+                      textAlign: TextAlign.end,
+                    ),
+                    Expanded(child: ColorPicker(furniture.colors)),
+                    Expanded(child: GetBuilder(
+                      builder: (OfficeFurnitureController controller) {
+                        return CounterButton(
+                          label: furniture.quantity,
+                          onIncrementSelected: () =>
+                              controller.increaseItem(furniture),
+                          onDecrementSelected: () =>
+                              controller.decreaseItem(furniture),
+                        );
+                      },
+                    ))
+                  ],
+                ).fadeAnimation(1.0)
               ],
             ),
           ),

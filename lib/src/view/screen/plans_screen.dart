@@ -1,11 +1,6 @@
 import 'package:get/get.dart';
-import 'package:rapyd_collect_api/core/app_asset.dart';
 import 'package:flutter/material.dart';
 import 'package:rapyd_collect_api/core/app_style.dart';
-import 'package:rapyd_collect_api/src/controller/office_furniture_controller.dart';
-import 'package:rapyd_collect_api/src/view/widget/cart_list_view.dart';
-import 'package:rapyd_collect_api/src/view/widget/counter_button.dart';
-import 'package:rapyd_collect_api/src/view/widget/empty_widget.dart';
 
 class PlansScreen extends StatefulWidget {
   const PlansScreen({Key? key}) : super(key: key);
@@ -16,44 +11,50 @@ class PlansScreen extends StatefulWidget {
 
 class _PlansScreenState extends State<PlansScreen>
     with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+  final ScrollController _scrollController =
+      ScrollController(initialScrollOffset: Get.width * .98);
+  final List<Map> plans = [
+    {
+      'title': 'Basic',
+      'price': 5.99,
+      'details': 'Limited support',
+    },
+    {
+      'title': 'Pro',
+      'price': 9.99,
+      'details': '24/7 support - only chat',
+    },
+    {
+      'title': 'Advanced',
+      'price': 19.99,
+      'details': '24/7 support - calls and chat',
+    },
+  ];
   @override
   void initState() {
-    _tabController = TabController(length: 3, vsync: this);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Plans', style: h4Style),
-          bottom: TabBar(controller: _tabController, tabs: [
-            Text('Basic', style: h4Style),
-            Text('Pro', style: h4Style),
-            Text('Advanced', style: h4Style),
-          ]),
-        ),
-        body: TabBarView(
-          controller: _tabController,
-          children: [
-            PlanTabView(
-                title: 'Basic',
-                subTitle: '5.99 \$',
-                details: '10 musics per month \n 128 quality',
-                onTap: () {}),
-            PlanTabView(
-                title: 'Pro',
-                subTitle: '15.99 \$',
-                details: '20 musics per month \n 128,320 quality',
-                onTap: () {}),
-            PlanTabView(
-                title: 'Advanced',
-                subTitle: '25.99 \$',
-                details: '50 musics per month \n 128,320,HiFi quality',
-                onTap: () {}),
-          ],
-        ));
+      body: _planLists(),
+    );
+  }
+
+  ListView _planLists() {
+    return ListView.builder(
+      controller: _scrollController,
+      itemBuilder: (context, index) {
+        return PlanTabView(
+            title: plans[index]['title'],
+            subTitle: plans[index]['price'].toString(),
+            details: plans[index]['details'],
+            onTap: () {});
+      },
+      itemCount: 3,
+      scrollDirection: Axis.horizontal,
+    );
   }
 }
 
@@ -74,27 +75,35 @@ class PlanTabView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: Get.width * .9,
+      height: Get.height * .7,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: Colors.grey[200]!,
+            color: Colors.grey,
           )),
-      padding: const EdgeInsets.all(15),
-      margin: const EdgeInsets.all(8),
+      padding: EdgeInsets.symmetric(horizontal: Get.width * .1),
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 30),
       child: Column(
         children: [
           SizedBox(
-            height: Get.height * .1,
+            height: Get.height * .3,
           ),
           Text(
             title,
             style: h15Style,
             textAlign: TextAlign.center,
           ),
+          SizedBox(
+            height: Get.height * .03,
+          ),
           Text(
             subTitle,
             style: h2Style,
             textAlign: TextAlign.center,
+          ),
+          SizedBox(
+            height: Get.height * .03,
           ),
           Text(
             details,
@@ -104,7 +113,7 @@ class PlanTabView extends StatelessWidget {
           Spacer(),
           ElevatedButton(onPressed: onTap, child: Text('Subscribe Now!')),
           SizedBox(
-            height: Get.height * .05,
+            height: Get.height * .1,
           ),
         ],
       ),
