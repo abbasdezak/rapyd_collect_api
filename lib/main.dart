@@ -1,5 +1,6 @@
 import 'dart:ui' show PointerDeviceKind;
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:rapyd_collect_api/core/app_theme.dart';
 import 'package:rapyd_collect_api/src/view/screen/home_screen.dart';
 
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       scrollBehavior: const MaterialScrollBehavior().copyWith(
         dragDevices: {
