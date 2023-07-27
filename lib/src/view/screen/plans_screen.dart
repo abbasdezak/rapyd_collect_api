@@ -1,7 +1,9 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:rapyd_collect_api/core/app_style.dart';
+import 'package:rapyd_collect_api/src/controller/plans_controller.dart';
 import 'package:rapyd_collect_api/src/view/widget/plan_card.dart';
+
+import 'subscription_checkout_page.dart';
 
 class PlansScreen extends StatefulWidget {
   const PlansScreen({Key? key}) : super(key: key);
@@ -10,27 +12,10 @@ class PlansScreen extends StatefulWidget {
   State<PlansScreen> createState() => _PlansScreenState();
 }
 
-class _PlansScreenState extends State<PlansScreen>
-    with SingleTickerProviderStateMixin {
+class _PlansScreenState extends State<PlansScreen> {
+  final controller = Get.put(PlansController());
   final ScrollController _scrollController =
       ScrollController(initialScrollOffset: Get.width * .98);
-  final List<Map> plans = [
-    {
-      'title': 'Basic',
-      'price': 5.99,
-      'details': 'Limited support',
-    },
-    {
-      'title': 'Pro',
-      'price': 9.99,
-      'details': '24/7 support - only chat',
-    },
-    {
-      'title': 'Advanced',
-      'price': 19.99,
-      'details': '24/7 support - calls and chat',
-    },
-  ];
   @override
   void initState() {
     super.initState();
@@ -38,22 +23,50 @@ class _PlansScreenState extends State<PlansScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _planLists(),
-    );
+    return Obx(() {
+      return Scaffold(
+        body: _renderBody(),
+      );
+    });
+  }
+
+  Widget _renderBody() {
+    switch (controller.loadingStatus.value) {
+      case LoadingStatus.failure:
+        return const Center(
+          child: Text('Failed to retrieve plans\nCheck your connection '),
+        );
+      case LoadingStatus.success:
+        return _planLists();
+      case LoadingStatus.init:
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      case LoadingStatus.loading:
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+    }
   }
 
   ListView _planLists() {
     return ListView.builder(
+      reverse: true,
       controller: _scrollController,
       itemBuilder: (context, index) {
+        final plan = controller.planDetails[index];
         return PlanCard(
-            title: plans[index]['title'],
-            subTitle: plans[index]['price'].toString(),
-            details: plans[index]['details'],
-            onTap: () {});
+            title: plan.product!.name!,
+            subTitle: plan.amount!,
+            details: plan.product!.description!,
+            onTap: () {
+              final result = Get.to(SubscriptionCheckoutPage(
+                planId: plan.id!,
+              ));
+              print(result);
+            });
       },
-      itemCount: 3,
+      itemCount: controller.planDetails.length,
       scrollDirection: Axis.horizontal,
     );
   }
